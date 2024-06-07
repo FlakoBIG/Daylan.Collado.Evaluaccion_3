@@ -1,9 +1,7 @@
-
-import { RegistrarRecluta, obtenerReclutados } from "./promesas";
+import { RegistrarRecluta, obtenerReclutados } from "./promesas.js";
 //Esto es para cuando la pagina cargue completamente se ejecute lo que este dentro
 window.addEventListener("load",()=>{
     document.getElementById("BTNRegistrar").addEventListener("click",RegistrarSoldado);
-    CargarSoldados();
     
 });
 //tengo pensado asta ahora , primero pasar por las validaciones y que las propias validaciones le entreguen a el registrar , pero voy a empesar registrando ya que es lo 
@@ -11,6 +9,8 @@ window.addEventListener("load",()=>{
 //const Validaciones = ()=>{}
 
 const RegistrarSoldado = ()=>{
+    //esto es para ver si entramos
+    console.log("Entre en registrarsoldado")
     //Primero se recuperan los elementos , por eso el nombre "ENombre" = ElementoNombre
     let ENombre = document.getElementById("INPNombre");
     let EApellido_1 = document.getElementById("INPApellido_1");
@@ -41,7 +41,7 @@ const RegistrarSoldado = ()=>{
     let VSi = ESi.value;
     let VNo = ENo.value;
     Manejo_armas="";
-    if (VSi){manejo_armas +="Si"}
+    if (VSi){Manejo_armas="Si"}else{Manejo_armas="No"}
     //Creamos la lista para los vehiculos que maneja
     Lista_de_vehiculos = [];
     if (VAuto){Lista_de_vehiculos.push("Auto")};
@@ -56,8 +56,13 @@ const RegistrarSoldado = ()=>{
     console.log(Soldado)
     RegistrarRecluta(Soldado).then(()=>{
         console.log("El soldado se registro con exito")
+    }).catch((error)=>{
+        alert("Algo paso , no se pudo registrar :c")
+        console.log(error);
     })
 }
+
+//Ahora se cargara los soldados que estan registrados en la base
 const CargarSoldados = ()=>{
     obtenerReclutados().then((Soldado)=>{
         console.log("Se recupero un soldado");
@@ -66,7 +71,7 @@ const CargarSoldados = ()=>{
     //ahora se prepara la estructura para la tabla
     let Estructura = "";
     Soldado.forEach(recluta => {
-        Estructura += "<th>";
+        Estructura += "<tr>";
         Estructura += "<td>"+recluta.Nombre+"</td>";
         Estructura += "<td>"+recluta.Apellido_1+"</td>";
         Estructura += "<td>"+recluta.Apellido_2+"</td>";
@@ -76,7 +81,7 @@ const CargarSoldados = ()=>{
         Estructura += "<td>"+recluta.Maneja+"</td>";
         Estructura += "<td>"+recluta.Quire_entrar_porque+"</td>";
         Estructura += "<td>"+recluta.Manejo_de_armas+"</td>";
-        Estructura += "</th>";
+        Estructura += "</tr>";
     });
     console.log(Estructura)
 
