@@ -3,11 +3,11 @@ import {db} from "./firebase.js";
 
 //esto es para registrar Reclutas a la base de datos
 export const RegistrarSoldado = async(Recluta)=>{
-    //const docRef = await addDoc(collection(db,"Recluta"),Recluta);
+    const docRef = await addDoc(collection(db,"Recluta"),Recluta);
 }
 //esto para obtener los Reclutas que se registraron en la base de datos
 export const obtenerReclutados = async()=>{
-    //const ref = collection(db,"Recluta");
+    const ref = collection(db,"Recluta");
     const querySnap = await getDocs(ref);
     let lista = [];
     querySnap.forEach(doc =>{

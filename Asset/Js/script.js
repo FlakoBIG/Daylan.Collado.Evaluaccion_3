@@ -1,13 +1,12 @@
-import { RegistrarSoldado, eliminarSoldado, obtenerReclutados } from "./promesas.js";
+import { RegistrarSoldado, eliminarSoldado, obtenerReclutados ,acualizarSoldado } from "./promesas.js";
 //Esto es para cuando la pagina cargue completamente se ejecute lo que este dentro
 window.addEventListener("load",()=>{
     document.getElementById("Cambiar_contraste").addEventListener("click",Cambiar_colores);
-    document.getElementById("BTNRegistrar").addEventListener("click",Validaciones);
+    document.getElementById("BTNRegistrar").addEventListener("click",D_R);
     document.getElementById("BTNAyuda_Rut").addEventListener("click",Ayuda_Rut);
     //se cargan los registrados
     CargarReclutas();
-    document.getElementById("BTNActualizar").addEventListener("click",ActualizarRecluta);
-
+    document.getElementById("BTNActualizar").addEventListener("click",D_A);
     //vehiculos y nose conduccir 
     // si algun input Cambia , se llama al correspondiente
     document.getElementById("INPNo_se_conducir").addEventListener("change",Quitar_los_demas_autos);
@@ -16,8 +15,12 @@ window.addEventListener("load",()=>{
     document.getElementById("INPAvion").addEventListener("change",Quitar_no_se_manejar);
     document.getElementById("INPCamion").addEventListener("change",Quitar_no_se_manejar);
 });
+//diferenciador de actualizar y registrar para las validaciones
+const D_A = ()=>{Validaciones("Actualizar");}
+const D_R = ()=>{Validaciones("Registrar");}
+
 //validaciones 
-const Validaciones = ()=>{
+const Validaciones = (Para)=>{
     //esto es para validar que todas se cumplieron
     let Vali_Vacio = false;
     let Vali_armas = false;
@@ -143,7 +146,8 @@ const Validaciones = ()=>{
         }
     
     if(Vali_Vacio&&Vali_armas&&Vali_Vehiculos&&Vali_estudios&&Vali_longitud){
-        RegistrarRecluta();
+        if(Para == "Registrar"){RegistrarRecluta();}
+        if(Para == "Actualizar"){ActualizarRecluta();}
     }
     }
 // es una alerta para cuando el usuario nesesite ayuda al momento de ingresar el rut
@@ -239,19 +243,31 @@ const CargarReclutas = ()=>{
         console.log(Estructura);
         //Este modifica el html para meterle la estrutura
         document.getElementById("Tabla_de_Reclutados").innerHTML = Estructura;
-
         Recluta.forEach((Soldado)=>{
             let Boton_actualizar = document.getElementById("ACT"+Soldado.id);
             Boton_actualizar.addEventListener("click",()=>{
                 document.getElementById("INPNombre").value = Soldado.Nombre;
-                document.getElementById("INPApellido_1").value = Soldado.Nombre;
-                document.getElementById("INPApellido_2").value = Soldado.Nombre;
-                document.getElementById("INPRut").value = Soldado.Nombre;
-                document.getElementById("INPFecha").value = Soldado.Nombre;
-                document.getElementById("SLTEstudio_cursado").value = Soldado.Nombre;
-                document.getElementById("INPMensaje").value = Soldado.Nombre;
-                document.getElementById("INPNombre").value = Soldado.Nombre;
-                document.getElementById("INPNombre").value = Soldado.Nombre;
+                document.getElementById("INPApellido_1").value = Soldado.Apellido_1;
+                document.getElementById("INPApellido_2").value = Soldado.Apellido_2;
+                document.getElementById("INPRut").value = Soldado.Rut;
+                document.getElementById("INPFecha").value = Soldado.Fecha_de_nacimiento;
+                document.getElementById("SLTEstudio_cursado").value = Soldado.Ultimo_Estudio_cursado;
+                
+                //Conduce
+                //si en la lista de lo que maneja el soldado tiene Auto, el checked del auto se activara pero si no , sera se desactivara esto para evitar que queden marcados las de otro usuario
+                if((Soldado.Maneja).includes("Auto")){document.getElementById("INPAuto").checked = true}else{document.getElementById("INPAuto").checked = false}
+                if((Soldado.Maneja).includes("Moto")){document.getElementById("INPMoto").checked = true}else{document.getElementById("INPMoto").checked = false}
+                if((Soldado.Maneja).includes("Avion")){document.getElementById("INPAvion").checked = true}else{document.getElementById("INPAvion").checked = false}
+                if((Soldado.Maneja).includes("Camion")){document.getElementById("INPCamion").checked = true}else{document.getElementById("INPCamion").checked = false}
+                document.getElementById("INPMensaje").value = Soldado.Quire_entrar_porque;
+                // si manejo armas es si , el checkt de si se marca y si no , se marca el No
+                if(Soldado.Manejo_de_armas == "Si"){
+                    document.getElementById("INPSi").checked = true;
+                }else{
+                    document.getElementById("INPNo").checked = true;
+                }
+                //El boton actualizar ahora tiene el id del soldado que se esta actualizando
+                document.getElementById("BTNActualizar").value = Soldado.id;
             })
             //Eliminar Recluta de la base de datos
             let Boton_eliminar = document.getElementById("ELI"+Soldado.id);
@@ -272,6 +288,68 @@ const CargarReclutas = ()=>{
 }
 //actualizar los reclutas que esten en la base de datos
 const ActualizarRecluta=()=>{
+    //esto es para ver si entramos
+    console.log("Entre en registrarReclutas")
+    //Primero se recuperan los elementos , por eso el nombre "ENombre" = ElementoNombre
+    let ENombre = document.getElementById("INPNombre");
+    let EApellido_1 = document.getElementById("INPApellido_1");
+    let EApellido_2 = document.getElementById("INPApellido_2");
+    let ERut = document.getElementById("INPRut");
+    let EFecha = document.getElementById("INPFecha");
+    let EEstudio_cursado = document.getElementById("SLTEstudio_cursado");
+    let EAuto = document.getElementById("INPAuto");
+    let EMoto = document.getElementById("INPMoto");
+    let EAvion = document.getElementById("INPAvion");
+    let ECamion = document.getElementById("INPCamion");
+    let ENo_se_coduccir = document.getElementById("INPNo_se_conducir");
+    let EMensaje = document.getElementById("INPMensaje");
+    let ESi = document.getElementById("INPSi");
+
+    //Segundo se optiene el valor de ese Elemento
+    let VNombre = ENombre.value;
+    let VApellido_1 = EApellido_1.value;
+    let VApellido_2 = EApellido_2.value;
+    let VRut = ERut.value;
+    let VFecha = EFecha.value;
+    let VEstudio_cursado = EEstudio_cursado.value;
+    let VAuto = EAuto.checked;
+    let VMoto = EMoto.checked;
+    let VAvion = EAvion.checked;
+    let VCamion = ECamion.checked;
+    let VNo_se_coduccir = ENo_se_coduccir.checked;
+    let VMensaje = EMensaje.value;
+    let VSi = ESi.checked;
+    console.log(VSi);
+    //una lista para decir si maneja o no armas
+    let Manejo_armas="";
+//si Vsi es true , entonses es porque si maneja armas , pero si es false , entonses es porque no
+    if(VSi){Manejo_armas="Si"}else{Manejo_armas="No"}
+    //Creamos la lista para los vehiculos que maneja
+    let Lista_de_vehiculos = [];
+    //ahora le metemos los vehiculos
+    // si Vauto es true, a la lista se le integra "Auto"
+    if (VAuto){Lista_de_vehiculos.push("Auto")};
+    if (VMoto){Lista_de_vehiculos.push("Moto")};
+    if (VAvion){Lista_de_vehiculos.push("Avion")};
+    if (VCamion){Lista_de_vehiculos.push("Camion")};
+    if (VNo_se_coduccir){Lista_de_vehiculos.push("No se conduccir")};
+    //revisamos la lista en consola
+    console.log(Lista_de_vehiculos);
+    //ahora se crea el objeto
+    let ACTSoldado = {Nombre:VNombre,Apellido_1:VApellido_1,Apellido_2:VApellido_2,Rut:VRut,Fecha_de_nacimiento:VFecha,
+        Ultimo_Estudio_cursado:VEstudio_cursado,Maneja:Lista_de_vehiculos,Quire_entrar_porque:VMensaje,Manejo_de_armas:Manejo_armas}
+    console.log(ACTSoldado)
+    let id = document.getElementById("BTNActualizar").value;
+    console.log(id);
+    document.getElementById("BTNActualizar").disabled = "True";
+    acualizarSoldado(ACTSoldado,id).then(()=>{
+        alert ("El Recluta se a actualizado")
+        CargarReclutas()
+        document.getElementById("BTNActualizar").disabled = "";
+    }).catch((e)=>{
+        console.log(e);
+    })
+    
 }
 const Quitar_los_demas_autos = ()=>{
     const Elemento = document.getElementById('Vehiculos');
