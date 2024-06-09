@@ -1,12 +1,19 @@
 import { RegistrarSoldado, eliminarSoldado, obtenerReclutados ,acualizarSoldado } from "./promesas.js";
 //Esto es para cuando la pagina cargue completamente se ejecute lo que este dentro
 window.addEventListener("load",()=>{
+    //boton cambiar colores o contraste
     document.getElementById("Cambiar_contraste").addEventListener("click",Cambiar_colores);
+    //boton registrar
     document.getElementById("BTNRegistrar").addEventListener("click",D_R);
+    //boton ayuda
     document.getElementById("BTNAyuda_Rut").addEventListener("click",Ayuda_Rut);
     //se cargan los registrados
     CargarReclutas();
     document.getElementById("BTNActualizar").addEventListener("click",D_A);
+    //Canselar actualizarcion
+    document.getElementById("BTNCanselar_ctualizar").addEventListener("click",volver_registrar)
+    //tamaño de letra
+    document.getElementById("Cambiar_tamaño_letra").addEventListener("change",Cambiar_tamaño_letras)
     //vehiculos y nose conduccir 
     // si algun input Cambia , se llama al correspondiente
     document.getElementById("INPNo_se_conducir").addEventListener("change",Quitar_los_demas_autos);
@@ -27,6 +34,7 @@ const Validaciones = (Para)=>{
     let Vali_Vehiculos = false;
     let Vali_estudios = false;
     let Vali_longitud = false;
+    let vali_rut = false;
     //primero validamos vacios
     Validar_Vacio('INPNombre');
     Validar_Vacio('INPApellido_1');
@@ -46,11 +54,13 @@ const Validaciones = (Para)=>{
             Vali_Vacio = false;
             //el input ahora tiene borde de color rojo
             Campo.style.borderColor = "red";
+            //se activa el texto
             let Vacio_Mensaje = document.getElementById("Vacio_"+IDCampo);
             Vacio_Mensaje.style.display = "block";
         }else{
             Vali_Vacio = true;
             Campo.style.borderColor = "green";
+            //se desactiva el texto
             let Vacio_Mensaje = document.getElementById("Vacio_"+IDCampo);
             Vacio_Mensaje.style.display = "none";
             //pasando la primera validacion, si es el rut pasa a ver su longitud
@@ -63,15 +73,19 @@ const Validaciones = (Para)=>{
         let Radio2 = document.getElementById(Rad2);
         //si el radio 1 no esta marcado ni tampoco el radio2
         if(!Radio1.checked && !Radio2.checked){
+            //si los radios no estan marcados pasa esto
             Vali_armas = false;
             Radio1.style.borderColor = "red";
             Radio2.style.borderColor = "red";
+            //se activa el texto
             let Vacio_Mensaje = document.getElementById("Vacio_INPArmas");
             Vacio_Mensaje.style.display = "block";
         }else{
+            //si los radios estan marcados pasa esto
             Vali_armas = true;
             Radio1.style.borderColor = "green";
             Radio2.style.borderColor = "green";
+            //se desactiva el texto
             let Vacio_Mensaje = document.getElementById("Vacio_INPArmas");
             Vacio_Mensaje.style.display = "none";
         }
@@ -86,9 +100,11 @@ const Validaciones = (Para)=>{
         console.log("estoy validando el vacio de los vehiculos")
         // si no esta marcado ninguno 
         if(!checkbox1.checked &&!checkbox2.checked&&!checkbox3.checked&&!checkbox4.checked&&!checkbox5.checked){
+            //si los checkbox no estan marcados pasa esto
             Vali_Vehiculos = false;
             checkbox1.style.borderColor = "red";
             checkbox2.style.borderColor = "red";
+            //se activa el texto
             let Vacio_Mensaje = document.getElementById("Vacio_INPVehiculos");
             Vacio_Mensaje.style.display = "block";}
         else{
@@ -96,6 +112,7 @@ const Validaciones = (Para)=>{
             Vali_Vehiculos = true;
             checkbox1.style.borderColor = "green";
             checkbox2.style.borderColor = "green";
+            //se desactiva el texto
             let Vacio_Mensaje = document.getElementById("Vacio_INPVehiculos");
             Vacio_Mensaje.style.display = "none";}
     }
@@ -109,6 +126,7 @@ const Validaciones = (Para)=>{
             Vali_estudios = false;
             Campo.style.borderColor = "red";
             Campo.style.borderColor = "red";
+            //se activa el texto
             let Vacio_Mensaje = document.getElementById("Vacio_SLTEstudio_cursado");
             Vacio_Mensaje.style.display = "block";
             Campo.value="Seleccionar.."}
@@ -117,6 +135,7 @@ const Validaciones = (Para)=>{
             Vali_estudios = true;
             Campo.style.borderColor = "green";
             Campo.style.borderColor = "green";
+            //se desactiva el texto
             let Vacio_Mensaje = document.getElementById("Vacio_SLTEstudio_cursado");
             Vacio_Mensaje.style.display = "none";}
         }
@@ -134,27 +153,51 @@ const Validaciones = (Para)=>{
             Vali_longitud = false;
             Rut.style.borderColor = "red";
             Rut.style.borderColor = "red";
-            let Vacio_Mensaje = document.getElementById("Vacio_INPRut.2");
+            //se activa el texto
+            let Vacio_Mensaje = document.getElementById("N9_INPRut.2");
             Vacio_Mensaje.style.display = "block";}
         else{
             //encambio cuando lo ingrese bien se el da el visto bueno
             Vali_longitud = true;
             Rut.style.borderColor = "green";
             Rut.style.borderColor = "green";
-            let Vacio_Mensaje = document.getElementById("Vacio_INPRut.2");
-            Vacio_Mensaje.style.display = "none";}
+            //se desactiva el texto
+            let Vacio_Mensaje = document.getElementById("N9_INPRut.2");
+            Vacio_Mensaje.style.display = "none";
+            if(Campo = "INPRut"){Validar_nega(Campo)}}
         }
-    
-    if(Vali_Vacio&&Vali_armas&&Vali_Vehiculos&&Vali_estudios&&Vali_longitud){
+    function Validar_nega(Campo){
+        console.log("entrado a nega")
+        let Rut = document.getElementById(Campo);
+        let VRut =(Rut.value);
+        console.log(VRut)
+        // si el value de rut contiene un "-" es porque es negativo asi que esta mal
+        if (VRut.includes("-")){
+            vali_rut = false;
+            Rut.style.borderColor = "red";
+            Rut.style.borderColor = "red";
+            //se activa el texto
+            let Vacio_Mensaje = document.getElementById("Nega_INPRut.3");
+            Vacio_Mensaje.style.display = "block";}
+        else{
+            //encambio cuando lo ingrese bien se el da el visto bueno
+            vali_rut = true;
+            Rut.style.borderColor = "green";
+            Rut.style.borderColor = "green";
+            //se desactiva el texto
+            let Vacio_Mensaje = document.getElementById("Nega_INPRut.3");
+            Vacio_Mensaje.style.display = "none";}
+    }
+    // si todo esta aprobado o mejor dicho todo estan en true , se actualiza o se registra dependiendo de que se esta haciendo
+    if(Vali_Vacio&&Vali_armas&&Vali_Vehiculos&&Vali_estudios&&Vali_longitud&&vali_rut){
         if(Para == "Registrar"){RegistrarRecluta();}
         if(Para == "Actualizar"){ActualizarRecluta();}
     }
     }
 // es una alerta para cuando el usuario nesesite ayuda al momento de ingresar el rut
 const Ayuda_Rut=()=>{
-    alert("Sin puntos ni guion y si termina en K replasalo por un 0")
+    alert("Sin puntos ni guion y si termina en K replasalo por un 0\n 21542460-k = 21424600")
 }
-
 const RegistrarRecluta = ()=>{
     //esto es para ver si entramos
     console.log("Entre en registrarReclutas")
@@ -210,6 +253,7 @@ const RegistrarRecluta = ()=>{
     //el then en este caso estaria imprimiendo el mensje "el Recluta...", 
     //pero mas que nada es para decir que se ejecuto bien
     RegistrarSoldado(Recluta).then(()=>{
+        alert("El Recluta se registro con exito")
         console.log("El Recluta se registro con exito")
         CargarReclutas();
     //el catch es para si algo se ejecuta mal mostrara ese mensaje
@@ -227,15 +271,15 @@ const CargarReclutas = ()=>{
         let Estructura = "";
         Recluta.forEach((Soldado)=>{
             Estructura += "<tr>";
-            Estructura += "<td>"+Soldado.Nombre+"</td>";
-            Estructura += "<td>"+Soldado.Apellido_1+"</td>";
-            Estructura += "<td>"+Soldado.Apellido_2+"</td>";
-            Estructura += "<td>"+Soldado.Rut+"</td>";
-            Estructura += "<td>"+Soldado.Fecha_de_nacimiento+"</td>";
-            Estructura += "<td>"+Soldado.Ultimo_Estudio_cursado+"</td>";
-            Estructura += "<td>"+Soldado.Maneja+"</td>";
-            Estructura += "<td>"+Soldado.Quire_entrar_porque+"</td>";
-            Estructura += "<td>"+Soldado.Manejo_de_armas+"</td>";
+            Estructura += "<td class='td' id='td'>"+Soldado.Nombre+"</td>";
+            Estructura += "<td class='td' id='td'>"+Soldado.Apellido_1+"</td>";
+            Estructura += "<td class='td' id='td'>"+Soldado.Apellido_2+"</td>";
+            Estructura += "<td class='td' id='td'>"+Soldado.Rut+"</td>";
+            Estructura += "<td class='td' id='td'>"+Soldado.Fecha_de_nacimiento+"</td>";
+            Estructura += "<td class='td' id='td'>"+Soldado.Ultimo_Estudio_cursado+"</td>";
+            Estructura += "<td class='td' id='td'>"+Soldado.Maneja+"</td>";
+            Estructura += "<td class='td' id='td'>"+Soldado.Quire_entrar_porque+"</td>";
+            Estructura += "<td class='td' id='td'>"+Soldado.Manejo_de_armas+"</td>";
             //estos dos botones estan juntos para poder usar un campo en la tabla, el de "opciones" 
             Estructura += "<td><button id='ACT"+Soldado.id+"'>Actualizar</button><button id='ELI"+Soldado.id+"'>Eliminar</button></td>"
             Estructura += "</tr>";
@@ -246,6 +290,27 @@ const CargarReclutas = ()=>{
         Recluta.forEach((Soldado)=>{
             let Boton_actualizar = document.getElementById("ACT"+Soldado.id);
             Boton_actualizar.addEventListener("click",()=>{
+                //cambiamos los botones y texto
+                // ACTUALIZAR
+                // se les remueve una clase y se les adiere otra clase
+                let boton_A = document.getElementById("BTNActualizar")
+                let Titulo_A = document.getElementById("Actualizar_reclutamiento")
+                let boton_C_A = document.getElementById("BTNCanselar_ctualizar")
+                boton_A.classList.remove("display_desaparece")
+                boton_A.classList.add("display_aparece")
+                Titulo_A.classList.remove("display_desaparece")
+                Titulo_A.classList.add("display_aparece")
+                boton_C_A.classList.remove("display_desaparece")
+                boton_C_A.classList.add("display_aparece")
+                //REGISTRAR
+                // se les remueve una clase y se les adiere otra clase
+                let boton_R = document.getElementById("BTNRegistrar")
+                let Titulo_R = document.getElementById("Formulario_reclutamiento")
+                boton_R.classList.remove("display_aparece")
+                boton_R.classList.add("display_desaparece")
+                Titulo_R.classList.remove("display_aparece")
+                Titulo_R.classList.add("display_desaparece")
+                //se le asigna a los inputs
                 document.getElementById("INPNombre").value = Soldado.Nombre;
                 document.getElementById("INPApellido_1").value = Soldado.Apellido_1;
                 document.getElementById("INPApellido_2").value = Soldado.Apellido_2;
@@ -259,6 +324,7 @@ const CargarReclutas = ()=>{
                 if((Soldado.Maneja).includes("Moto")){document.getElementById("INPMoto").checked = true}else{document.getElementById("INPMoto").checked = false}
                 if((Soldado.Maneja).includes("Avion")){document.getElementById("INPAvion").checked = true}else{document.getElementById("INPAvion").checked = false}
                 if((Soldado.Maneja).includes("Camion")){document.getElementById("INPCamion").checked = true}else{document.getElementById("INPCamion").checked = false}
+                if((Soldado.Maneja).includes("No se conduccir")){document.getElementById("INPNo_se_conducir").checked = true}else{document.getElementById("INPNo_se_conducir").checked = false}
                 document.getElementById("INPMensaje").value = Soldado.Quire_entrar_porque;
                 // si manejo armas es si , el checkt de si se marca y si no , se marca el No
                 if(Soldado.Manejo_de_armas == "Si"){
@@ -273,7 +339,9 @@ const CargarReclutas = ()=>{
             let Boton_eliminar = document.getElementById("ELI"+Soldado.id);
             console.log(Recluta)
             Boton_eliminar.addEventListener("click",()=>{
-                if(confirm("Quieres eliminar al Recluta"+Soldado.Nombre+" "+Soldado.Apellido_1+" "+Soldado.Apellido_2)){
+                if(confirm("Quieres eliminar al Recluta"+Soldado.Nombre+" "+Soldado.Apellido_1+" "+Soldado.Apellido_2+"\nEste contiene los siguientes datos\nNombre :"+Soldado.Nombre+"\nApellido_1 :"+Soldado.Apellido_1+"\nApellido_2 :"+Soldado.Apellido_2
+                    +"\nRut :"+Soldado.Rut+"\nFecha de nacimiento :"+Soldado.Fecha_de_nacimiento+" "+Soldado.Ultimo_Estudio_cursado+"\nManeja :"+Soldado.Maneja+"\nQuiere entrar porque :"+Soldado.Quire_entrar_porque+"\nSabe manejar armas? :"+Soldado.Manejo_de_armas
+                )){
                     eliminarSoldado(Soldado.id).then(()=>{
                         alert("El Recluta se elimino de la base de datos")
                         CargarReclutas();
@@ -339,22 +407,27 @@ const ActualizarRecluta=()=>{
     let ACTSoldado = {Nombre:VNombre,Apellido_1:VApellido_1,Apellido_2:VApellido_2,Rut:VRut,Fecha_de_nacimiento:VFecha,
         Ultimo_Estudio_cursado:VEstudio_cursado,Maneja:Lista_de_vehiculos,Quire_entrar_porque:VMensaje,Manejo_de_armas:Manejo_armas}
     console.log(ACTSoldado)
+    //se obtiene el id que esta en el btn
     let id = document.getElementById("BTNActualizar").value;
-    console.log(id);
-    document.getElementById("BTNActualizar").disabled = "True";
+    // se llama a la promesa y se le entrega el soldado actualizado + la id del soldado que tiene que actualizar
     acualizarSoldado(ACTSoldado,id).then(()=>{
         alert ("El Recluta se a actualizado")
-        CargarReclutas()
+        CargarReclutas();
+        // se quitan las cosas de actualizar
+        volver_registrar();
         document.getElementById("BTNActualizar").disabled = "";
     }).catch((e)=>{
+        alert ("Algo paso no se actualiso")
         console.log(e);
     })
     
 }
 const Quitar_los_demas_autos = ()=>{
+    // se obtiene el div que contiene los autos que estan disponibles
     const Elemento = document.getElementById('Vehiculos');
     console.log(Elemento);
     const cheket = document.getElementById("INPNo_se_conducir");
+    // si el nose conduccir esta marcado , el div se vuelve none para no aparecer
     if(cheket.checked){Elemento.style.display = "none"}
     else{Elemento.style.display = "inline"}
 };
@@ -373,20 +446,53 @@ const Quitar_no_se_manejar = ()=>{
 }
 const Cambiar_colores = ()=>{
     console.log("Se va a cambiar el contraste");
-    //se obtiene body 
+    //se obtiene los elementos que se decea cambiar la clase  
     const Elemento = document.getElementById("body");
-    //se elimina la clase contraste_default
-    console.log(Elemento.classList)
-    if(Elemento.classList == "Contraste_default"){
-        //se remueve el contraste defaul
-        Elemento.classList.remove("Contraste_default")
-        //se le pone el Contraste_negro
-        Elemento.classList.add("Contraste_negro")
-    }else{
-        //se remueve el Contraste_negro
-        Elemento.classList.remove("Contraste_negro")
-        //se le pone el Contraste_default
-        Elemento.classList.add("Contraste_default")
+    const Elemento2 = document.getElementById("cuadro_R");
+    const Elemento3 = document.getElementById("contenedor");
+    const Elemento4 = document.getElementById("tabla");
+    // se les cambia 
+    Elemento.classList.toggle("Contraste_default");
+    Elemento.classList.toggle("Contraste_negro");
+    Elemento2.classList.toggle("cuadro_recorrido");
+    Elemento2.classList.toggle("cuadro_recorrido_oscuro");
+    Elemento3.classList.toggle("contenedor");
+    Elemento3.classList.toggle("contenedor_oscuro");
+    Elemento4.classList.toggle("table");
+    Elemento4.classList.toggle("table_oscuro");
+}
+const Cambiar_tamaño_letras = ()=>{
+    let Tamanio = document.getElementById("Cambiar_tamaño_letra")
+    const VTamanio = Tamanio.value;
+    const Elemento = document.getElementById("Div_principal");
+    //si el valor que se ingreso es 10 se cambia la clase que tienen 10px
+    if(VTamanio == "10"){
+        Elemento.classList.remove("font-size2")
+        Elemento.classList.add("font-size1")}
+    //si el valor que se ingreso es 15 se cambia la clase que tienen 15px
+    if(VTamanio =="15"){
+        Elemento.classList.remove("font-size1")
+        Elemento.classList.add("font-size2")}
     }
-    //se le agrega la nueva clase
+const volver_registrar = ()=>{
+    //cambiamos los botones y texto
+    // ACTUALIZAR
+    let boton_A = document.getElementById("BTNActualizar")
+    let Titulo_A = document.getElementById("Actualizar_reclutamiento")
+    let boton_C_A = document.getElementById("BTNCanselar_ctualizar")
+    // se les remueve una clase y se les adiere otra clase
+    boton_A.classList.remove("display_aparece")
+    boton_A.classList.add("display_desaparece")
+    Titulo_A.classList.remove("display_aparece")
+    Titulo_A.classList.add("display_desaparece")
+    boton_C_A.classList.remove("display_aparece")
+    boton_C_A.classList.add("display_desaparece")
+    //REGISTRAR
+    let boton_R = document.getElementById("BTNRegistrar")
+    let Titulo_R = document.getElementById("Formulario_reclutamiento")
+    // se les remueve una clase y se les adiere otra clase
+    boton_R.classList.remove("display_desaparece")
+    boton_R.classList.add("display_aparece")
+    Titulo_R.classList.remove("display_desaparece")
+    Titulo_R.classList.add("display_aparece")
 }

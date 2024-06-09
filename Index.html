@@ -6,76 +6,90 @@
     <link rel="stylesheet" href="Asset/css/Css.css">
     <script type="module" src="Asset/Js/script.js"></script>
     <script type="module" src="Asset/Js/firebase.js"></script>
-    <title>Document</title>
+    <title>Reclutamiento militar</title>
 </head>
 <body class="Contraste_default" id="body">
-    <h1>Reclutamiento Militar</h1>
-    <button id="Cambiar_contraste">Cambiar contraste</button>
-    <h2>Formulario de Reclutamiento</h2>
-    <h2>Actualizar Recluta</h2>
-        <p>Nombre</p>
-        <input type="text" name="Nombre" id="INPNombre" placeholder="Nombre">
-        <p class="Display_none"id="Vacio_INPNombre">Debes ingresar el nombre del Recluta</p>
-        <p>Apellido_1</p>
-        <input type="text" name="Apellido_1" id="INPApellido_1" placeholder="Apellido 1">
-        <p class="Display_none"id="Vacio_INPApellido_1">Debes ingresar el Primer apellido del Recluta</p>
-        <p>Apellido_2</p>
-        <input type="text" name="Apellido_2" id="INPApellido_2" placeholder="Apellido 2">
-        <p class="Display_none"id="Vacio_INPApellido_2">Debes ingresar el Segundo apellido del Recluta</p>
-        <div id="Div_Rut">
-            <p>Rut</p>
-            <input type="number" name="Rut" id="INPRut" placeholder="Rut" title="Sin puntos ni guion y si termina en K replasalo por un 0">
-            <button id="BTNAyuda_Rut">Ayuda</button>
-            <p class="Display_none"id="Vacio_INPRut">Debes ingresar el Rut del Recluta</p>
-            <p class="Display_none"id="Vacio_INPRut.2">Tienes que ingresar solo 9 numeros</p>
+    <div class="font-size2" id="Div_principal">
+        <div class="cuadro_recorrido" id ="cuadro_R">
+            <p>Cambiar el contraste</p>
+            <button id="Cambiar_contraste">Cambiar contraste</button>
+            <p>Cambiar tamaño de la letra</p>
+            <select id="Cambiar_tamaño_letra">
+                <option value="Seleccionar..">Seleccionar..</option>  
+                <option value="10">10px</option>
+                <option value="15">15px</option>
+            </select>
         </div>
-        <p>fecha de nacimiento</p>
-        <input type="date" name="Fecha" id="INPFecha">
-        <p class="Display_none"id="Vacio_INPFecha">Debes ingresar la fecha de nacimiento del Recluta</p>
-        <p>Ultimo Estudio cursado</p>
-        <select id="SLTEstudio_cursado">
-            <option value="Seleccionar..">Seleccionar..</option>  
-            <option value="Kinder">Kinder</option>
-            <option value="Basica">Basica</option>
-            <option value="Media">Media</option>
-            <option value="Univercidad">Univercidad</option>
-        </select>
-        <p class="Display_none"id="Vacio_SLTEstudio_cursado">Debes seleccionar uno de los estudios</p>
-        <p>Que sabes comducir?</p>
-        <div id="Vehiculos">
-            <input type="checkbox" name="Auto" id="INPAuto">Auto
-            <input type="checkbox" name="Moto" id="INPMoto">Moto
-            <input type="checkbox" name="Avion" id="INPAvion">Avion
-            <input type="checkbox" name="Camion" id="INPCamion">Camion
+        <div class="contenedor" id="contenedor">
+            <h1>Reclutamiento Militar</h1>
+            <h2 class="display_aparece" id="Formulario_reclutamiento">Formulario de Reclutamiento</h2>
+            <h2 class="display_desaparece" id="Actualizar_reclutamiento">Actualizar Recluta</h2>
+                <p>Nombre</p>
+                <input type="text" name="Nombre" id="INPNombre" placeholder="Nombre">
+                <p class="Display_none"id="Vacio_INPNombre">Debes ingresar el nombre del Recluta</p>
+                <p>Apellido_1</p>
+                <input type="text" name="Apellido_1" id="INPApellido_1" placeholder="Apellido 1">
+                <p class="Display_none"id="Vacio_INPApellido_1">Debes ingresar el Primer apellido del Recluta</p>
+                <p>Apellido_2</p>
+                <input type="text" name="Apellido_2" id="INPApellido_2" placeholder="Apellido 2">
+                <p class="Display_none"id="Vacio_INPApellido_2">Debes ingresar el Segundo apellido del Recluta</p>
+                <div id="Div_Rut">
+                    <p>Rut</p>
+                    <input type="number" name="Rut" id="INPRut" placeholder="Rut" title="Sin puntos ni guion y si termina en K replasalo por un 0" min="0">
+                    <button id="BTNAyuda_Rut">Ayuda</button>
+                    <p class="Display_none"id="Vacio_INPRut">Debes ingresar el Rut del Recluta</p>
+                    <p class="Display_none"id="N9_INPRut.2">Tienes que ingresar solo 9 numeros</p>
+                    <p class="Display_none"id="Nega_INPRut.3">No exiten los RUT negativo , vuelve a ingresar</p>
+                </div>
+                <p>fecha de nacimiento</p>
+                <input type="date" name="Fecha" id="INPFecha">
+                <p class="Display_none"id="Vacio_INPFecha">Debes ingresar la fecha de nacimiento del Recluta</p>
+                <p>Ultimo Estudio cursado</p>
+                <select id="SLTEstudio_cursado">
+                    <option value="Seleccionar..">Seleccionar..</option>  
+                    <option value="Kinder">Kinder</option>
+                    <option value="Basica">Basica</option>
+                    <option value="Media">Media</option>
+                    <option value="Univercidad">Univercidad</option>
+                </select>
+                <p class="Display_none"id="Vacio_SLTEstudio_cursado">Debes seleccionar uno de los estudios</p>
+                <p>Que sabes comducir?</p>
+                <div id="Vehiculos">
+                    <input type="checkbox" name="Auto" id="INPAuto">Auto
+                    <input type="checkbox" name="Moto" id="INPMoto">Moto
+                    <input type="checkbox" name="Avion" id="INPAvion">Avion
+                    <input type="checkbox" name="Camion" id="INPCamion">Camion
+                </div>
+                <div id="Div_No_se_conducir"><input type="checkbox" name="No_se_conducir" id="INPNo_se_conducir">No se conducir</div>
+                <p class="Display_none"id="Vacio_INPVehiculos">Debes Marcar alguna opcion</p>
+                <p>Porque quieres entrar?</p>
+                <textarea name="Mensaje" id="INPMensaje" cols="30" rows="10" placeholder="Ingresa porque quieres entrar a la milicia"></textarea>
+                <p class="Display_none"id="Vacio_INPMensaje">Debes ingresar el Porque quieres entrar</p>
+                <p>Tienes nociones en manejo de armas?</p>
+                <input type="radio" name="manejo_de_armas" id="INPSi">Si
+                <input type="radio" name="manejo_de_armas" id="INPNo">No
+                <p class="Display_none"id="Vacio_INPArmas">Debes Marcar alguna  de las 2 opciones</p>
+                <button class="display_aparece" id="BTNRegistrar">Registrar</button>
+                <button class="display_desaparece" id="BTNActualizar">Actualizar</button>
+                <button class="display_desaparece" id="BTNCanselar_ctualizar">Canselar Actualizar</button>    
         </div>
-        <div id="Div_No_se_conducir"><input type="checkbox" name="No_se_conducir" id="INPNo_se_conducir">No se conducir</div>
-        <p class="Display_none"id="Vacio_INPVehiculos">Debes Marcar alguna opcion</p>
-        <p>Porque quieres entrar?</p>
-        <textarea name="Mensaje" id="INPMensaje" cols="30" rows="10" placeholder="Ingresa porque quieres entrar a la milicia"></textarea>
-        <p class="Display_none"id="Vacio_INPMensaje">Debes ingresar el Porque quieres entrar</p>
-        <p>Tienes nociones en manejo de armas?</p>
-        <input type="radio" name="manejo_de_armas" id="INPSi">Si
-        <input type="radio" name="manejo_de_armas" id="INPNo">No
-        <p class="Display_none"id="Vacio_INPArmas">Debes Marcar alguna  de las 2 opciones</p>
-        <button id="BTNRegistrar">Registrar</button>
-        <button id="BTNActualizar">Actualizar</button>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Apellido_1</th>
-                    <th>Apellido_2</th>
-                    <th>Rut</th>
-                    <th>fecha de nacimiento</th>
-                    <th>Ultimo Estudio cursado</th>
-                    <th>Que sabes comducir?</th>
-                    <th>Porque quieres entrar?</th>
-                    <th>Tienes nociones en manejo de armas?</th>
-                    <th>Opciones</th>
-                </tr>
-            </thead>
-            <tbody id="Tabla_de_Reclutados">
-            </tbody>
-        </table>
+            <table class="table" id="tabla">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido_1</th>
+                        <th>Apellido_2</th>
+                        <th>Rut</th>
+                        <th>fecha de nacimiento</th>
+                        <th>Ultimo Estudio cursado</th>
+                        <th>Que sabes comducir?</th>
+                        <th>Porque quieres entrar?</th>
+                        <th>Tienes nociones en manejo de armas?</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody id="Tabla_de_Reclutados"></tbody>
+            </table>
+    </div>
 </body>
 </html>
